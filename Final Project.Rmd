@@ -1,6 +1,6 @@
 
 ---
-title: "Models of Neighborhood Change in YOUR CITY NAME"
+title: "Models of Neighborhood Change in Raleigh-Durham-Chapel Hill"
 output: 
   flexdashboard::flex_dashboard:
     theme: bootstrap
@@ -60,24 +60,24 @@ library( rgdal )
 
 
 # from local file path
-phx <- geojson_read( "/Users/asiawoods/Documents/GitHub/CPP529/rdch_dorling.geojson", what="sp" )
+rdch <- geojson_read( "/Users/asiawoods/Documents/GitHub/CPP529/rdch_dorling.geojson", what="sp" )
 
 
 
 
 
 # reproject the map 
-phx2 <- spTransform( phx, CRS("+init=epsg:3395") )
+rdch2 <- spTransform( rdch, CRS("+init=epsg:3395") )
 
 # convert the sp map format to 
 # an sf (simple features) format:
 # ggmap requires the sf format
-phx.sf <- st_as_sf( phx2 )
+rdch.sf <- st_as_sf( rdch2 )
 
 # separate out the data frame from the map
-d <- as.data.frame( phx.sf )
+d <- as.data.frame( rdch.sf )
 
-plot(phx)
+plot(rdch)
 
 ```
 
@@ -120,7 +120,7 @@ x <- as.numeric( x )
 # remember to add the variable back to the census dataset
 d3$tractid2 <- x 
 
-phx2 <- merge( phx2, d3, by.x="GEOID", by.y="tractid", all.x=T )
+rdch2 <- merge( rdch2, d3, by.x="GEOID", by.y="tractid", all.x=T )
 ```
 
 ```{r}
@@ -282,8 +282,8 @@ renderPlot({
   
 get_data <- 
   reactive({
-             phx.sf <- 
-             phx.sf %>% 
+             rdch.sf <- 
+             rdch.sf %>% 
              mutate( q = ntile( get(input$demographics), 10 ) )  
           })
 
@@ -347,15 +347,15 @@ bb <- st_bbox( c( xmin = -12519146, xmax = -12421368,
 
 # ADD YOUR CUSTOM LABELS TO THE CLUSTERS 
 
-phx2$cluster[ phx2$cluster == "1" ] <- "Non-Hispanic White, married, self-employed professionals who are home-owners with at least a Bachelor’s Degree"
-phx2$cluster[ phx2$cluster == "2" ] <- "Multilingual, unemployed Native Americans with at least high school degrees that live in poverty
+rdch2$cluster[ rdch2$cluster == "1" ] <- "Non-Hispanic White, married, self-employed professionals who are home-owners with at least a Bachelor’s Degree"
+rdch2$cluster[ rdch2$cluster == "2" ] <- "Multilingual, unemployed Native Americans with at least high school degrees that live in poverty
 "
-phx2$cluster[ phx2$cluster == "3" ] <- "Single-parent Native Americans that are female-headed, multi-family households and live in poverty"
-phx2$cluster[ phx2$cluster == "4" ] <- "Elderly Non-Hispanic White Veterans"
-phx2$cluster[ phx2$cluster == "5" ] <- "Non-Hispanic Black minors that live in neighborhoods created in the last ten years"
-phx2$cluster[ phx2$cluster == "6" ] <- "Married  professionals with at least a Bachelor’s Degree"
-phx2$cluster[ phx2$cluster == "7" ] <- "Multilingual, foreign Hispanic persons who live in poverty and have at least a high school diploma"
-phx2$cluster[ phx2$cluster == "8" ] <- "Non-married persons who live in 30+ year structures and work in a primarily female labor force
+rdch2$cluster[ rdch2$cluster == "3" ] <- "Single-parent Native Americans that are female-headed, multi-family households and live in poverty"
+rdch2$cluster[ rdch2$cluster == "4" ] <- "Elderly Non-Hispanic White Veterans"
+rdch2$cluster[ rdch2$cluster == "5" ] <- "Non-Hispanic Black minors that live in neighborhoods created in the last ten years"
+rdch2$cluster[ rdch2$cluster == "6" ] <- "Married  professionals with at least a Bachelor’s Degree"
+rdch2$cluster[ rdch2$cluster == "7" ] <- "Multilingual, foreign Hispanic persons who live in poverty and have at least a high school diploma"
+rdch2$cluster[ rdch2$cluster == "8" ] <- "Non-married persons who live in 30+ year structures and work in a primarily female labor force
 "
 
 
@@ -364,7 +364,7 @@ renderTmap({
 
 tmap_mode("view")
 tm_basemap( "CartoDB.Positron" )
-tm_shape( phx2, bbox=bb ) + 
+tm_shape( rdch2, bbox=bb ) + 
   tm_polygons( col="cluster", palette="Accent",
                title="Community Types" ) 
 
@@ -426,8 +426,8 @@ renderPlot({
   
 get_data <- 
   reactive({
-             phx.sf <- 
-             phx.sf %>% 
+             rdch.sf <- 
+             rdch.sf %>% 
              mutate( q = ntile( get(input$home.value), 10 ) )  
           })
 
